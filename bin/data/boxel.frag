@@ -1,8 +1,11 @@
 #version 410
 
-in vec4 color;
+in vec2 uv;
+
+uniform sampler2D textureMap;
+
 out vec4 fragColor;
 
 void main (void) {
-    fragColor = color;
+    fragColor = texture(textureMap, uv);
 }
