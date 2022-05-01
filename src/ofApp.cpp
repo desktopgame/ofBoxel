@@ -4,6 +4,9 @@
 void ofApp::setup() {
   // シェーダー読み込み
   assert(m_shader.load("boxel.vert", "boxel.frag"));
+  // 画像読み込み
+  ofDisableArbTex();
+  assert(m_image.load("textureMap.png"));
   // ワールドの生成
   ofMesh mesh = ofMesh::plane(1.0f, 1.0f, 2, 2, OF_PRIMITIVE_TRIANGLES);
   this->m_boxelRenderer =
@@ -12,7 +15,7 @@ void ofApp::setup() {
     for (int y = 0; y < 100; y += 2) {
       for (int z = 0; z < 100; z += 2) {
         for (int i = 0; i < 6; i++) {
-          m_boxelRenderer->batch(glm::vec3(x, y, z), i, i, i);
+          m_boxelRenderer->batch(glm::vec3(x, y, z), i, i);
         }
       }
     }
@@ -37,6 +40,7 @@ void ofApp::draw() {
   glCullFace(GL_BACK);
   ofEnableDepthTest();
   m_shader.begin();
+  m_shader.setUniformTexture("textureMap", m_image.getTexture(), 1);
   m_boxelRenderer->render();
   m_shader.end();
   m_camera.end();

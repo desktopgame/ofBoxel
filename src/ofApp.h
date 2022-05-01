@@ -26,5 +26,6 @@ class ofApp : public ofBaseApp {
  private:
   ofEasyCam m_camera;
   ofShader m_shader;
+  ofImage m_image;
   std::unique_ptr<ofBoxel::BoxelRenderer> m_boxelRenderer;
 };
