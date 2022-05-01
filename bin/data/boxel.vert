@@ -5,10 +5,12 @@ layout(location=3) in vec2 aUV;
 layout(location=10) in vec3 aPosition;
 layout(location=11) in float aLocalOffset;
 layout(location=12) in float aLocalRotation;
+layout(location=13) in float aTextureSlot;
 uniform mat4 modelViewProjectionMatrix;
 uniform vec3 localOffsetTable[6];
 uniform mat4 localRotationTable[6];
 
+out float textureSlot;
 out vec2 uv;
 
 mat4 translate(vec3 v) {
@@ -26,6 +28,7 @@ void main(void) {
     vec3 position = aPosition + localOffset;
     mat4 localTransform = translate(position) * localRotation * translate(-position);
     mat4 MVP = (modelViewProjectionMatrix * localTransform);
+    textureSlot = aTextureSlot;
     uv = aUV;
     gl_Position = MVP * vec4(aVertex + position, 1);
 }

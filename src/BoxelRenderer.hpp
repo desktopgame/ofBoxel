@@ -9,7 +9,8 @@ class BoxelRenderer {
   explicit BoxelRenderer(ofShader shader, const ofMesh& mesh,
                          float offset = 0.5f);
   void clear();
-  void batch(const glm::vec3& pos, int localOffset, int localRotation);
+  void batch(const glm::vec3& pos, int localOffset, int localRotation,
+             int textureSlot);
   void rehash();
   void render();
 
@@ -24,5 +25,6 @@ class BoxelRenderer {
   std::vector<glm::vec3> m_attribPosition;
   std::vector<float> m_attribLocalOffset;
   std::vector<float> m_attribLocalRotation;
+  std::vector<float> m_attribTextureSlot;
 };
 }  // namespace ofBoxel

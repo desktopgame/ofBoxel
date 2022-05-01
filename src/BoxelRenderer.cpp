@@ -7,7 +7,8 @@ BoxelRenderer::BoxelRenderer(ofShader shader, const ofMesh& mesh, float offset)
       m_dirty(false),
       m_attribPosition(),
       m_attribLocalOffset(),
-      m_attribLocalRotation() {
+      m_attribLocalRotation(),
+      m_attribTextureSlot() {
   // 頂点情報の設定
   const auto& vertices = mesh.getVertices();
   const auto& normals = mesh.getNormals();
@@ -42,17 +43,19 @@ BoxelRenderer::BoxelRenderer(ofShader shader, const ofMesh& mesh, float offset)
 }
 
 void BoxelRenderer::batch(const glm::vec3& pos, int localOffset,
-                          int localRotation) {
+                          int localRotation, int textureSlot) {
   this->m_dirty = true;
   m_attribPosition.emplace_back(pos);
   m_attribLocalOffset.emplace_back(static_cast<float>(localOffset));
   m_attribLocalRotation.emplace_back(static_cast<float>(localRotation));
+  m_attribTextureSlot.emplace_back(static_cast<float>(textureSlot));
 }
 
 void BoxelRenderer::clear() {
   m_attribPosition.clear();
   m_attribLocalOffset.clear();
   m_attribLocalRotation.clear();
+  m_attribTextureSlot.clear();
   this->m_dirty = true;
 }
 
@@ -78,6 +81,11 @@ void BoxelRenderer::rehash() {
                          m_attribLocalRotation.size(), GL_STATIC_DRAW,
                          sizeof(float));
   m_vbo.setAttributeDivisor(12, 1);
+  // テクスチャを設定
+  m_vbo.setAttributeData(13, &m_attribTextureSlot.front(), 1,
+                         m_attribTextureSlot.size(), GL_STATIC_DRAW,
+                         sizeof(float));
+  m_vbo.setAttributeDivisor(13, 1);
 }
 
 void BoxelRenderer::render() {
