@@ -1,0 +1,15 @@
+## User settings
+xcuserdata/
+
+## Xcode 8 and earlier
+*.xcscmblueprint
+*.xccheckout
+
+ofBoxel
+*.app
+*.exe
+.DS_Store
+obj
+.vscode/browse.db
+.vscode/browse.db-shm
+.vscode/browse.db-wal
