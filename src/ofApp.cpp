@@ -6,7 +6,7 @@ void ofApp::setup() {
   assert(m_shader.load("boxel.vert", "boxel.frag"));
   // 画像読み込み
   ofDisableArbTex();
-  assert(m_image.load("textureMap.png"));
+  assert(m_image.load("debug.png"));
   // ワールドの生成
   ofMesh mesh = ofMesh::plane(1.0f, 1.0f, 2, 2, OF_PRIMITIVE_TRIANGLES);
   this->m_boxelRenderer =
