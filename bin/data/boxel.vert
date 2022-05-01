@@ -1,12 +1,5 @@
 #version 410
-/*
-0: position
-1: color
-2: normal
-3: texcoord
-*/
 layout(location=0) in vec3 aVertex;
-layout(location=3) in vec2 aUV;
 
 layout(location=10) in vec3 aPosition;
 layout(location=11) in float aLocalOffset;
@@ -18,7 +11,6 @@ uniform mat4 localRotationTable[6];
 uniform vec4 palletColorTable[10];
 
 out vec4 color;
-//out vec2 uv;
 
 mat4 translate(vec3 v) {
     return mat4(
