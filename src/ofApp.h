@@ -1,5 +1,8 @@
 #pragma once
 
+#include <memory>
+
+#include "BoxelRenderer.hpp"
 #include "ofMain.h"
 
 class ofApp : public ofBaseApp {
@@ -22,4 +25,6 @@ class ofApp : public ofBaseApp {
 
  private:
   ofEasyCam m_camera;
+  ofShader m_shader;
+  std::unique_ptr<ofBoxel::BoxelRenderer> m_boxelRenderer;
 };

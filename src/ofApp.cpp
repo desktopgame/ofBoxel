@@ -1,7 +1,23 @@
 #include "ofApp.h"
 
 //--------------------------------------------------------------
-void ofApp::setup() {}
+void ofApp::setup() {
+  // シェーダー読み込み
+  assert(m_shader.load("boxel.vert", "boxel.frag"));
+  // ワールドの生成
+  ofMesh mesh = ofMesh::plane(1.0f, 1.0f, 2, 2, OF_PRIMITIVE_TRIANGLES);
+  this->m_boxelRenderer =
+      std::make_unique<ofBoxel::BoxelRenderer>(m_shader, mesh);
+  for (int x = 0; x < 100; x += 2) {
+    for (int y = 0; y < 100; y += 2) {
+      for (int z = 0; z < 100; z += 2) {
+        for (int i = 0; i < 6; i++) {
+          m_boxelRenderer->batch(glm::vec3(x, y, z), i, i, i);
+        }
+      }
+    }
+  }
+}
 
 //--------------------------------------------------------------
 void ofApp::update() {}
@@ -20,13 +36,9 @@ void ofApp::draw() {
   glEnable(GL_CULL_FACE);
   glCullFace(GL_BACK);
   ofEnableDepthTest();
-  for (int x = 0; x < 100; x += 2) {
-    for (int y = 0; y < 100; y += 2) {
-      for (int z = 0; z < 100; z += 2) {
-        ofBox(glm::vec3(x, y, z), 1.0f);
-      }
-    }
-  }
+  m_shader.begin();
+  m_boxelRenderer->render();
+  m_shader.end();
   m_camera.end();
 }
 
