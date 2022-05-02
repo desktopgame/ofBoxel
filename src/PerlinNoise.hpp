@@ -61,8 +61,8 @@ class PerlinNoise {
     reseed(seed);
   }
 
-  template <class URNG,
-            std::enable_if_t<!std::is_arithmetic_v<URNG>>* = nullptr>
+  template <class URNG, typename std::enable_if<
+                            !std::is_arithmetic<URNG>::value>::value* = nullptr>
   explicit PerlinNoise(URNG& urng) : p() {
     reseed(urng);
   }
@@ -80,8 +80,8 @@ class PerlinNoise {
     }
   }
 
-  template <class URNG,
-            std::enable_if_t<!std::is_arithmetic_v<URNG>>* = nullptr>
+  template <class URNG, typename std::enable_if<
+                            !std::is_arithmetic<URNG>::value>::type* = nullptr>
   void reseed(URNG& urng) {
     for (size_t i = 0; i < 256; ++i) {
       p[i] = static_cast<std::uint8_t>(i);
