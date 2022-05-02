@@ -24,7 +24,8 @@ void ofApp::setup() {
   const int octave = 2;
   const double fx = static_cast<double>(freq) / static_cast<double>(worldSize);
   const double fz = static_cast<double>(freq) / static_cast<double>(worldSize);
-  ofBoxel::World world(glm::ivec3(worldSize, worldSize, worldSize));
+  this->m_world = std::make_unique<ofBoxel::World>(
+      glm::ivec3(worldSize, worldSize, worldSize));
   siv::PerlinNoise perilinNoise;
   perilinNoise.reseed(static_cast<unsigned int>(ofRandom(1000)));
   for (int x = 0; x < worldSize; x++) {
@@ -37,13 +38,13 @@ void ofApp::setup() {
         iy = 0;
       else if (iy >= worldSize)
         iy = worldSize - 1;
-      world.setBlock(glm::ivec3(x, iy, z), grass);
+      m_world->setBlock(glm::ivec3(x, iy, z), grass);
       for (int down = iy - 1; down >= 0; down--) {
-        world.setBlock(glm::ivec3(x, down, z), dirt);
+        m_world->setBlock(glm::ivec3(x, down, z), dirt);
       }
     }
   }
-  world.batch(*(m_boxelRenderer.get()));
+  m_world->batch(*(m_boxelRenderer.get()));
   uint64_t end = ofGetElapsedTimeMillis();
   ofLog() << (end - start) << "ms";
 }
