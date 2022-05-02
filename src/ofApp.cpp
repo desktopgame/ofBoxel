@@ -1,5 +1,6 @@
 #include "ofApp.h"
 
+#include "PerlinNoise.hpp"
 #include "World.hpp"
 
 //--------------------------------------------------------------
@@ -17,11 +18,34 @@ void ofApp::setup() {
       std::make_shared<ofBoxel::Block>(std::array<int, 6>{0, 0, 0, 0, 0, 0});
   auto grass =
       std::make_shared<ofBoxel::Block>(std::array<int, 6>{2, 0, 1, 1, 1, 1});
-  ofBoxel::World world(glm::ivec3(64, 64, 64));
-  world.setBlock(glm::ivec3(0, 0, 0), grass);
-  world.setBlock(glm::ivec3(1, 0, 0), grass);
-  world.setBlock(glm::ivec3(2, 0, 0), grass);
+  uint64_t start = ofGetElapsedTimeMillis();
+  const int worldSize = 128;
+  const int freq = 4;
+  const int octave = 2;
+  const double fx = static_cast<double>(freq) / static_cast<double>(worldSize);
+  const double fz = static_cast<double>(freq) / static_cast<double>(worldSize);
+  ofBoxel::World world(glm::ivec3(worldSize, worldSize, worldSize));
+  siv::PerlinNoise perilinNoise;
+  perilinNoise.reseed(static_cast<unsigned int>(ofRandom(1000)));
+  for (int x = 0; x < worldSize; x++) {
+    for (int z = 0; z < worldSize; z++) {
+      double nx = static_cast<double>(x) * fx;
+      double nz = static_cast<double>(z) * fz;
+      double y = perilinNoise.octaveNoise0_1(nx, nz, octave);
+      int iy = static_cast<int>(static_cast<double>(worldSize) * y);
+      if (iy < 0)
+        iy = 0;
+      else if (iy >= worldSize)
+        iy = worldSize - 1;
+      world.setBlock(glm::ivec3(x, iy, z), grass);
+      for (int down = iy - 1; down >= 0; down--) {
+        world.setBlock(glm::ivec3(x, down, z), dirt);
+      }
+    }
+  }
   world.batch(*(m_boxelRenderer.get()));
+  uint64_t end = ofGetElapsedTimeMillis();
+  ofLog() << (end - start) << "ms";
 }
 
 //--------------------------------------------------------------
