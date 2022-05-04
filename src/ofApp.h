@@ -26,9 +26,12 @@ class ofApp : public ofBaseApp {
   void gotMessage(ofMessage msg);
 
  private:
+  void lockMouseCursor();
+  void unlockMouseCursor();
   ofCamera m_camera;
   ofShader m_shader;
   ofImage m_image;
+  bool m_openInv;
   std::unique_ptr<ofBoxel::Controller> m_controller;
   std::unique_ptr<ofBoxel::World> m_world;
   std::unique_ptr<ofBoxel::BoxelRenderer> m_boxelRenderer;

@@ -1,8 +1,10 @@
 #include "ofApp.h"
 
+#include <GLFW/glfw3.h>
+#include <ofAppGLFWWindow.h>
+
 #include "PerlinNoise.hpp"
 #include "World.hpp"
-
 //--------------------------------------------------------------
 void ofApp::setup() {
   // シェーダー読み込み
@@ -50,6 +52,8 @@ void ofApp::setup() {
   // カメラ指定
   m_camera.setPosition(glm::vec3(64, 80, 64));
   this->m_controller = std::make_unique<ofBoxel::Controller>(m_camera);
+  this->m_openInv = false;
+  lockMouseCursor();
 }
 
 //--------------------------------------------------------------
@@ -77,7 +81,17 @@ void ofApp::draw() {
 }
 
 //--------------------------------------------------------------
-void ofApp::keyPressed(int key) {}
+void ofApp::keyPressed(int key) {
+  if (key == 'e') {
+    if (m_openInv) {
+      lockMouseCursor();
+    } else {
+      unlockMouseCursor();
+    }
+    this->m_openInv = !m_openInv;
+    m_controller->enabledRotation = !m_openInv;
+  }
+}
 
 //--------------------------------------------------------------
 void ofApp::keyReleased(int key) {}
@@ -108,3 +122,17 @@ void ofApp::gotMessage(ofMessage msg) {}
 
 //--------------------------------------------------------------
 void ofApp::dragEvent(ofDragInfo dragInfo) {}
+
+//--------------------------------------------------------------
+void ofApp::lockMouseCursor() {
+  ofAppGLFWWindow *glfwWindow = (ofAppGLFWWindow *)ofGetWindowPtr();
+  glfwSetInputMode(glfwWindow->getGLFWWindow(), GLFW_CURSOR,
+                   GLFW_CURSOR_HIDDEN | GLFW_CURSOR_DISABLED);
+}
+
+//--------------------------------------------------------------
+void ofApp::unlockMouseCursor() {
+  ofAppGLFWWindow *glfwWindow = (ofAppGLFWWindow *)ofGetWindowPtr();
+  glfwSetInputMode(glfwWindow->getGLFWWindow(), GLFW_CURSOR,
+                   GLFW_CURSOR_NORMAL);
+}
