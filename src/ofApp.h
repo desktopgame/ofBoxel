@@ -3,6 +3,7 @@
 #include <memory>
 
 #include "BoxelRenderer.hpp"
+#include "Controller.hpp"
 #include "World.hpp"
 #include "ofMain.h"
 
@@ -25,9 +26,10 @@ class ofApp : public ofBaseApp {
   void gotMessage(ofMessage msg);
 
  private:
-  ofEasyCam m_camera;
+  ofCamera m_camera;
   ofShader m_shader;
   ofImage m_image;
+  std::unique_ptr<ofBoxel::Controller> m_controller;
   std::unique_ptr<ofBoxel::World> m_world;
   std::unique_ptr<ofBoxel::BoxelRenderer> m_boxelRenderer;
 };

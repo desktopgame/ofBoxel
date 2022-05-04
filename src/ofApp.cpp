@@ -47,6 +47,9 @@ void ofApp::setup() {
   m_world->batch(*(m_boxelRenderer.get()));
   uint64_t end = ofGetElapsedTimeMillis();
   ofLog() << (end - start) << "ms";
+  // カメラ指定
+  m_camera.setPosition(glm::vec3(64, 80, 64));
+  this->m_controller = std::make_unique<ofBoxel::Controller>(m_camera);
 }
 
 //--------------------------------------------------------------
