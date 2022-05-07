@@ -121,21 +121,20 @@ void ofApp::keyReleased(int key) {}
 void ofApp::mouseMoved(int x, int y) {
   ofBoxel::PhysicsEngine p(1.0f);
   this->m_ray = p.ray(m_camera.getPosition(), m_camera.getLookAtDir(), 128.0f);
-  glm::ivec3 hit, near;
   bool isHit = false;
   for (auto rayPos : m_ray) {
     if (m_world->isFilled(rayPos)) {
-      hit = rayPos;
+      this->m_hit = rayPos;
       isHit = true;
       break;
     } else {
-      near = rayPos;
+      this->m_hitSide = rayPos;
     }
   }
   if (isHit) {
-    int face = static_cast<int>(p.face(hit, near));
+    int face = static_cast<int>(p.face(m_hit, m_hitSide));
     m_rayRenderer->clear();
-    m_rayRenderer->batch(hit, face, face, 63);
+    m_rayRenderer->batch(m_hit, face, face, 63);
   }
 }
 
