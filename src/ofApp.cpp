@@ -4,18 +4,23 @@
 #include <ofAppGLFWWindow.h>
 
 #include "PerlinNoise.hpp"
+#include "PhysicsEngine.hpp"
 #include "World.hpp"
 //--------------------------------------------------------------
 void ofApp::setup() {
   // シェーダー読み込み
-  assert(m_shader.load("boxel.vert", "boxel.frag"));
+  assert(m_boxelShader.load("boxel.vert", "boxel.frag"));
+  assert(m_rayShader.load("boxel.vert", "boxel.frag"));
   // 画像読み込み
   ofDisableArbTex();
   assert(m_image.load("textureMap.png"));
   // ワールドの生成
-  ofMesh mesh = ofMesh::plane(1.0f, 1.0f, 2, 2, OF_PRIMITIVE_TRIANGLES);
+  ofMesh boxMesh = ofMesh::plane(1.0f, 1.0f, 2, 2, OF_PRIMITIVE_TRIANGLES);
+  ofMesh rayMesh = ofMesh::plane(1.2f, 1.2f, 2, 2, OF_PRIMITIVE_TRIANGLES);
   this->m_boxelRenderer =
-      std::make_unique<ofBoxel::BoxelRenderer>(m_shader, mesh);
+      std::make_unique<ofBoxel::BoxelRenderer>(m_boxelShader, boxMesh);
+  this->m_rayRenderer =
+      std::make_unique<ofBoxel::BoxelRenderer>(m_rayShader, rayMesh, 0.6f);
   auto dirt =
       std::make_shared<ofBoxel::Block>(std::array<int, 6>{0, 0, 0, 0, 0, 0});
   auto grass =
@@ -61,23 +66,39 @@ void ofApp::update() {}
 
 //--------------------------------------------------------------
 void ofApp::draw() {
+  //
+  // 3D描画
+  //
+  m_camera.begin();
+  // ワールドの描画
+  glEnable(GL_CULL_FACE);
+  glCullFace(GL_BACK);
+  ofEnableDepthTest();
+  m_boxelShader.begin();
+  m_boxelShader.setUniformTexture("textureMap", m_image.getTexture(), 1);
+  m_boxelRenderer->render();
+  m_boxelShader.end();
+  if (!m_ray.empty()) {
+    m_rayShader.begin();
+    m_rayShader.setUniformTexture("textureMap", m_image.getTexture(), 1);
+    m_rayRenderer->render();
+    m_rayShader.end();
+  }
+  m_camera.end();
+  //
+  // 2D描画
+  //
   glDisable(GL_CULL_FACE);
+  ofDisableDepthTest();
   // FPSの描画
   {
     char buf[128];
     ::sprintf(buf, "%.2f", ofGetFrameRate());
     ofDrawBitmapString(buf, glm::vec2(50, 50));
   }
-  m_camera.begin();
-  // ワールドの描画
-  glEnable(GL_CULL_FACE);
-  glCullFace(GL_BACK);
-  ofEnableDepthTest();
-  m_shader.begin();
-  m_shader.setUniformTexture("textureMap", m_image.getTexture(), 1);
-  m_boxelRenderer->render();
-  m_shader.end();
-  m_camera.end();
+  // カーソル描画
+  ofSetColor(255, 255, 255, 255);
+  ofDrawCircle(ofGetWindowSize() / 2.0f, 5.0f);
 }
 
 //--------------------------------------------------------------
@@ -97,7 +118,26 @@ void ofApp::keyPressed(int key) {
 void ofApp::keyReleased(int key) {}
 
 //--------------------------------------------------------------
-void ofApp::mouseMoved(int x, int y) {}
+void ofApp::mouseMoved(int x, int y) {
+  ofBoxel::PhysicsEngine p(1.0f);
+  this->m_ray = p.ray(m_camera.getPosition(), m_camera.getLookAtDir(), 128.0f);
+  glm::ivec3 hit, near;
+  bool isHit = false;
+  for (auto rayPos : m_ray) {
+    if (m_world->isFilled(rayPos)) {
+      hit = rayPos;
+      isHit = true;
+      break;
+    } else {
+      near = rayPos;
+    }
+  }
+  if (isHit) {
+    int face = static_cast<int>(p.face(hit, near));
+    m_rayRenderer->clear();
+    m_rayRenderer->batch(hit, face, face, 63);
+  }
+}
 
 //--------------------------------------------------------------
 void ofApp::mouseDragged(int x, int y, int button) {}

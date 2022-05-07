@@ -29,10 +29,13 @@ class ofApp : public ofBaseApp {
   void lockMouseCursor();
   void unlockMouseCursor();
   ofCamera m_camera;
-  ofShader m_shader;
+  ofShader m_boxelShader;
+  ofShader m_rayShader;
   ofImage m_image;
   bool m_openInv;
+  std::vector<glm::ivec3> m_ray;
   std::unique_ptr<ofBoxel::Controller> m_controller;
   std::unique_ptr<ofBoxel::World> m_world;
   std::unique_ptr<ofBoxel::BoxelRenderer> m_boxelRenderer;
+  std::unique_ptr<ofBoxel::BoxelRenderer> m_rayRenderer;
 };
