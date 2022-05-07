@@ -21,9 +21,9 @@ void ofApp::setup() {
       std::make_unique<ofBoxel::BoxelRenderer>(m_boxelShader, boxMesh);
   this->m_rayRenderer =
       std::make_unique<ofBoxel::BoxelRenderer>(m_rayShader, rayMesh, 0.6f);
-  auto dirt =
+  this->m_dirt =
       std::make_shared<ofBoxel::Block>(std::array<int, 6>{0, 0, 0, 0, 0, 0});
-  auto grass =
+  this->m_grass =
       std::make_shared<ofBoxel::Block>(std::array<int, 6>{2, 0, 1, 1, 1, 1});
   uint64_t start = ofGetElapsedTimeMillis();
   const int worldSize = 128;
@@ -45,9 +45,9 @@ void ofApp::setup() {
         iy = 0;
       else if (iy >= worldSize)
         iy = worldSize - 1;
-      m_world->setBlock(glm::ivec3(x, iy, z), grass);
+      m_world->setBlock(glm::ivec3(x, iy, z), m_grass);
       for (int down = iy - 1; down >= 0; down--) {
-        m_world->setBlock(glm::ivec3(x, down, z), dirt);
+        m_world->setBlock(glm::ivec3(x, down, z), m_dirt);
       }
     }
   }
