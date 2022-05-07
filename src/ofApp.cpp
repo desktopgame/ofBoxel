@@ -142,7 +142,17 @@ void ofApp::mouseMoved(int x, int y) {
 void ofApp::mouseDragged(int x, int y, int button) {}
 
 //--------------------------------------------------------------
-void ofApp::mousePressed(int x, int y, int button) {}
+void ofApp::mousePressed(int x, int y, int button) {
+  if (button == 0 && m_world->isContains(m_hit)) {
+    m_world->setBlock(m_hit, nullptr);
+    m_world->invalidate(m_hit);
+    m_world->batch(*m_boxelRenderer.get());
+  } else if (button == 2 && m_world->isContains(m_hitSide)) {
+    m_world->setBlock(m_hitSide, m_dirt);
+    m_world->invalidate(m_hit);
+    m_world->batch(*m_boxelRenderer.get());
+  }
+}
 
 //--------------------------------------------------------------
 void ofApp::mouseReleased(int x, int y, int button) {}

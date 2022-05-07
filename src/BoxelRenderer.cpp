@@ -1,10 +1,13 @@
 #include "BoxelRenderer.hpp"
 
+#include <stdexcept>
+
 namespace ofBoxel {
 BoxelRenderer::BoxelRenderer(ofShader shader, const ofMesh& mesh, float offset)
     : m_shader(shader),
       m_vbo(),
       m_dirty(false),
+      m_freeIndex(0),
       m_attribPosition(),
       m_attribLocalOffset(),
       m_attribLocalRotation(),
@@ -45,10 +48,53 @@ BoxelRenderer::BoxelRenderer(ofShader shader, const ofMesh& mesh, float offset)
 void BoxelRenderer::batch(const glm::vec3& pos, int localOffset,
                           int localRotation, int textureSlot) {
   this->m_dirty = true;
-  m_attribPosition.emplace_back(pos);
-  m_attribLocalOffset.emplace_back(static_cast<float>(localOffset));
-  m_attribLocalRotation.emplace_back(static_cast<float>(localRotation));
-  m_attribTextureSlot.emplace_back(static_cast<float>(textureSlot));
+  if (m_freeIndex > 0) {
+    int at = static_cast<int>(m_attribPosition.size()) - m_freeIndex;
+    m_attribPosition.at(at) = pos;
+    m_attribLocalOffset.at(at) = static_cast<float>(localOffset);
+    m_attribLocalRotation.at(at) = static_cast<float>(localRotation);
+    m_attribTextureSlot.at(at) = static_cast<float>(textureSlot);
+    m_freeIndex--;
+  } else {
+    m_attribPosition.emplace_back(pos);
+    m_attribLocalOffset.emplace_back(static_cast<float>(localOffset));
+    m_attribLocalRotation.emplace_back(static_cast<float>(localRotation));
+    m_attribTextureSlot.emplace_back(static_cast<float>(textureSlot));
+  }
+}
+
+void BoxelRenderer::compact(const std::vector<glm::ivec3>& update) {
+  // 前回コンパクションしたときの要素がまだ余っていたら今回もそれらを拾う
+  while (m_freeIndex > 0) {
+    m_attribPosition[m_attribPosition.size() - m_freeIndex] = update.at(0);
+    m_freeIndex--;
+  }
+  // updateに入っている更新予定の座標が attribtue の中で何番目であるかを取得
+  std::vector<int> table;
+  for (int i = 0; i < update.size(); i++) {
+    glm::ivec3 pos = update.at(i);
+    int sides = 6;
+    for (int j = 0; j < m_attribPosition.size(); j++) {
+      glm::ivec3 aPos = glm::ivec3(m_attribPosition.at(j));
+      if (pos == aPos) {
+        table.emplace_back(j);
+        // 全ての面を取得したら終了
+        if (sides-- == 0) {
+          break;
+        }
+      }
+    }
+  }
+  // 添字テーブルを昇順ソート
+  // 後で選り分けるときにこちらの方が都合が良いので
+  std::sort(table.begin(), table.end());
+  // コンパクションの結果再利用可能になる要素の数
+  this->m_freeIndex = static_cast<int>(table.size());
+  // 選り分ける
+  compact(table, m_attribPosition);
+  compact(table, m_attribLocalOffset);
+  compact(table, m_attribLocalRotation);
+  compact(table, m_attribTextureSlot);
 }
 
 void BoxelRenderer::clear() {
@@ -90,8 +136,8 @@ void BoxelRenderer::rehash() {
 
 void BoxelRenderer::render() {
   rehash();
-  m_vbo.drawElementsInstanced(GL_TRIANGLES, 6,
-                              static_cast<int>(m_attribPosition.size()));
+  m_vbo.drawElementsInstanced(
+      GL_TRIANGLES, 6, static_cast<int>(m_attribPosition.size()) - m_freeIndex);
 }
 
 // private

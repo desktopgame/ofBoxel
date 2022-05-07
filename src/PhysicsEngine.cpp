@@ -1,10 +1,10 @@
 #include "PhysicsEngine.hpp"
 
 #include <ofLog.h>
+#include <ofVectorMath.h>
 
 #include <array>
 #include <cmath>
-#include <glm/glm.hpp>
 #include <limits>
 
 namespace ofBoxel {

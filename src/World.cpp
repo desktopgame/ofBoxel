@@ -4,7 +4,7 @@
 
 namespace ofBoxel {
 
-World::World(const glm::ivec3& size) : m_size(size) {
+World::World(const glm::ivec3& size) : m_size(size), m_dirtyPositions() {
   for (int i = 0; i < size.y; i++) {
     std::vector<std::vector<BlockInstance>> v1;
     for (int j = 0; j < size.x; j++) {
@@ -18,17 +18,29 @@ World::World(const glm::ivec3& size) : m_size(size) {
   }
 }
 void World::batch(BoxelRenderer& boxelRenderer) {
-  glm::ivec3 p;
-  for (int i = 0; i < m_size.y; i++) {
-    p.y = i;
-    for (int j = 0; j < m_size.x; j++) {
-      p.x = j;
-      for (int k = 0; k < m_size.z; k++) {
-        p.z = k;
-        batch(boxelRenderer, p);
+  if (m_dirtyPositions.empty()) {
+    boxelRenderer.clear();
+    // 全部変更されていたらゼロからバッチ
+    glm::ivec3 p;
+    for (int i = 0; i < m_size.y; i++) {
+      p.y = i;
+      for (int j = 0; j < m_size.x; j++) {
+        p.x = j;
+        for (int k = 0; k < m_size.z; k++) {
+          p.z = k;
+          batch(boxelRenderer, p);
+        }
       }
     }
+  } else {
+    // 少しだけ変更されているなら必要に応じてパッチ
+    boxelRenderer.compact(m_dirtyPositions);
+    for (auto dp : m_dirtyPositions) {
+      batch(boxelRenderer, dp);
+    }
+    m_dirtyPositions.clear();
   }
+  m_dirtyPositions.clear();
 }
 void World::batch(BoxelRenderer& boxelRenderer, const glm::ivec3& pos) {
   auto block = getBlock(pos);
@@ -52,6 +64,21 @@ void World::batch(BoxelRenderer& boxelRenderer, const glm::ivec3& pos) {
   }
   if (!isFilled(pos - glm::ivec3(0, 1, 0))) {
     boxelRenderer.batch(pos, 1, 1, block->getTextureSlotAt(1));
+  }
+}
+void World::invalidate(const glm::ivec3& pos) {
+  glm::ivec3 a[7];
+  a[0] = (pos);
+  a[1] = (pos + glm::ivec3(0, 1, 0));   // top
+  a[2] = (pos + glm::ivec3(0, -1, 0));  // bottom
+  a[3] = (pos + glm::ivec3(-1, 0, 0));  // left
+  a[4] = (pos + glm::ivec3(1, 0, 0));   // right
+  a[5] = (pos + glm::ivec3(0, 0, 1));   // front
+  a[6] = (pos + glm::ivec3(0, 0, -1));  // back
+  for (auto e : a) {
+    if (isContains(e)) {
+      m_dirtyPositions.emplace_back(e);
+    }
   }
 }
 void World::setBlock(const glm::ivec3& pos, const BlockInstance& block) {
