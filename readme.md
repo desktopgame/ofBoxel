@@ -12,3 +12,4 @@ openFrameworksでボクセルの世界を描画するサンプルです。
 * opt2_autogen          パーリンノイズを組み込んで地形生成
 * controller            WASD+矢印での移動、マウスカーソルでブロックの選択
 * dynamic-boxel-update  左クリックでボクセルの破壊、右クリックで設置
+* half-block            半ブロックの表現　※bキーで配置ブロック切り替え
