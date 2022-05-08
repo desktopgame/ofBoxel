@@ -202,6 +202,29 @@ void World::batch(BoxelRenderer& boxelRenderer, const glm::ivec3& pos) {
       }
       break;
     }
+    case Shape::BackSlab: {
+      int offset = 36;
+      int scale = 0;
+      if (!isFilled(pos - glm::ivec3(1, 0, 0))) {
+        boxelRenderer.batch(pos, 2 + offset, 2, 2, block->getTextureSlotAt(2));
+      }
+      if (!isFilled(pos + glm::ivec3(1, 0, 0))) {
+        boxelRenderer.batch(pos, 3 + offset, 2, 3, block->getTextureSlotAt(3));
+      }
+      if (!isFilled(pos - glm::ivec3(0, 0, 1))) {
+        boxelRenderer.batch(pos, 5 + offset, 0, 5, block->getTextureSlotAt(5));
+      }
+      if (!isFilled(pos + glm::ivec3(0, 0, 1))) {
+        boxelRenderer.batch(pos, 4 + offset, 0, 4, block->getTextureSlotAt(4));
+      }
+      if (!isFilled(pos + glm::ivec3(0, 1, 0))) {
+        boxelRenderer.batch(pos, 0 + offset, 1, 0, block->getTextureSlotAt(0));
+      }
+      if (!isFilled(pos - glm::ivec3(0, 1, 0))) {
+        boxelRenderer.batch(pos, 1 + offset, 1, 1, block->getTextureSlotAt(1));
+      }
+      break;
+    }
   }
 }
 void World::invalidate(const glm::ivec3& pos) {
