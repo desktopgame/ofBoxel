@@ -118,25 +118,7 @@ void ofApp::keyPressed(int key) {
 void ofApp::keyReleased(int key) {}
 
 //--------------------------------------------------------------
-void ofApp::mouseMoved(int x, int y) {
-  ofBoxel::PhysicsEngine p(1.0f);
-  this->m_ray = p.ray(m_camera.getPosition(), m_camera.getLookAtDir(), 128.0f);
-  bool isHit = false;
-  for (auto rayPos : m_ray) {
-    if (m_world->isFilled(rayPos)) {
-      this->m_hit = rayPos;
-      isHit = true;
-      break;
-    } else {
-      this->m_hitSide = rayPos;
-    }
-  }
-  if (isHit) {
-    int face = static_cast<int>(p.face(m_hit, m_hitSide));
-    m_rayRenderer->clear();
-    m_rayRenderer->batch(m_hit, face, face, 63);
-  }
-}
+void ofApp::mouseMoved(int x, int y) { raycast(); }
 
 //--------------------------------------------------------------
 void ofApp::mouseDragged(int x, int y, int button) {}
@@ -147,10 +129,12 @@ void ofApp::mousePressed(int x, int y, int button) {
     m_world->setBlock(m_hit, nullptr);
     m_world->invalidate(m_hit);
     m_world->batch(*m_boxelRenderer.get());
+    raycast();
   } else if (button == 2 && m_world->isContains(m_hitSide)) {
     m_world->setBlock(m_hitSide, m_dirt);
     m_world->invalidate(m_hit);
     m_world->batch(*m_boxelRenderer.get());
+    raycast();
   }
 }
 
@@ -184,4 +168,24 @@ void ofApp::unlockMouseCursor() {
   ofAppGLFWWindow *glfwWindow = (ofAppGLFWWindow *)ofGetWindowPtr();
   glfwSetInputMode(glfwWindow->getGLFWWindow(), GLFW_CURSOR,
                    GLFW_CURSOR_NORMAL);
+}
+
+void ofApp::raycast() {
+  ofBoxel::PhysicsEngine p(1.0f);
+  this->m_ray = p.ray(m_camera.getPosition(), m_camera.getLookAtDir(), 128.0f);
+  bool isHit = false;
+  for (auto rayPos : m_ray) {
+    if (m_world->isFilled(rayPos)) {
+      this->m_hit = rayPos;
+      isHit = true;
+      break;
+    } else {
+      this->m_hitSide = rayPos;
+    }
+  }
+  if (isHit) {
+    int face = static_cast<int>(p.face(m_hit, m_hitSide));
+    m_rayRenderer->clear();
+    m_rayRenderer->batch(m_hit, face, face, 63);
+  }
 }

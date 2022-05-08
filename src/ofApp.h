@@ -28,6 +28,7 @@ class ofApp : public ofBaseApp {
  private:
   void lockMouseCursor();
   void unlockMouseCursor();
+  void raycast();
   ofCamera m_camera;
   ofShader m_boxelShader;
   ofShader m_rayShader;
