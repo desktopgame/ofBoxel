@@ -26,7 +26,7 @@ void ofApp::setup() {
   this->m_grass = std::make_shared<ofBoxel::Block>(
       ofBoxel::Shape::Block, std::array<int, 6>{2, 0, 1, 1, 1, 1});
   this->m_stone = std::make_shared<ofBoxel::Block>(
-      ofBoxel::Shape::RightSlab, std::array<int, 6>{24, 24, 24, 24, 24, 24});
+      ofBoxel::Shape::FrontSlab, std::array<int, 6>{24, 24, 24, 24, 24, 24});
   uint64_t start = ofGetElapsedTimeMillis();
   const int worldSize = 128;
   const int freq = 4;
