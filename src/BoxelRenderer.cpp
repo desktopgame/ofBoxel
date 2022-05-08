@@ -64,17 +64,12 @@ void BoxelRenderer::batch(const glm::vec3& pos, int localOffset,
 }
 
 void BoxelRenderer::compact(const std::vector<glm::ivec3>& update) {
-  // 前回コンパクションしたときの要素がまだ余っていたら今回もそれらを拾う
-  while (m_freeIndex > 0) {
-    m_attribPosition[m_attribPosition.size() - m_freeIndex] = update.at(0);
-    m_freeIndex--;
-  }
   // updateに入っている更新予定の座標が attribtue の中で何番目であるかを取得
   std::vector<int> table;
   for (int i = 0; i < update.size(); i++) {
     glm::ivec3 pos = update.at(i);
     int sides = 6;
-    for (int j = 0; j < m_attribPosition.size(); j++) {
+    for (int j = 0; j < m_attribPosition.size() - m_freeIndex; j++) {
       glm::ivec3 aPos = glm::ivec3(m_attribPosition.at(j));
       if (pos == aPos) {
         table.emplace_back(j);
@@ -84,6 +79,11 @@ void BoxelRenderer::compact(const std::vector<glm::ivec3>& update) {
         }
       }
     }
+  }
+  // 前回コンパクションしたときの要素がまだ余っていたら今回もそれらを拾う
+  while (m_freeIndex > 0) {
+    table.emplace_back(m_attribPosition.size() - m_freeIndex);
+    m_freeIndex--;
   }
   // 添字テーブルを昇順ソート
   // 後で選り分けるときにこちらの方が都合が良いので
