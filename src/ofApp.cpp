@@ -21,10 +21,10 @@ void ofApp::setup() {
       std::make_unique<ofBoxel::BoxelRenderer>(m_boxelShader, boxMesh);
   this->m_rayRenderer =
       std::make_unique<ofBoxel::BoxelRenderer>(m_rayShader, rayMesh, 0.6f);
-  this->m_dirt =
-      std::make_shared<ofBoxel::Block>(std::array<int, 6>{0, 0, 0, 0, 0, 0});
-  this->m_grass =
-      std::make_shared<ofBoxel::Block>(std::array<int, 6>{2, 0, 1, 1, 1, 1});
+  this->m_dirt = std::make_shared<ofBoxel::Block>(
+      ofBoxel::Shape::Block, std::array<int, 6>{0, 0, 0, 0, 0, 0});
+  this->m_grass = std::make_shared<ofBoxel::Block>(
+      ofBoxel::Shape::Block, std::array<int, 6>{2, 0, 1, 1, 1, 1});
   uint64_t start = ofGetElapsedTimeMillis();
   const int worldSize = 128;
   const int freq = 4;
