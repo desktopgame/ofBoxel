@@ -186,7 +186,7 @@ void ofApp::raycast() {
   this->m_ray = p.ray(m_camera.getPosition(), m_camera.getLookAtDir(), 128.0f);
   bool isHit = false;
   for (auto rayPos : m_ray) {
-    if (m_world->isFilled(rayPos)) {
+    if (m_world->isRayHit(rayPos)) {
       this->m_hit = rayPos;
       isHit = true;
       break;
