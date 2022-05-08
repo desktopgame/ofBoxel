@@ -34,9 +34,10 @@ class ofApp : public ofBaseApp {
   ofShader m_rayShader;
   ofImage m_image;
   bool m_openInv;
+  int m_putBlock;
   std::shared_ptr<ofBoxel::Block> m_dirt;
   std::shared_ptr<ofBoxel::Block> m_grass;
-  std::shared_ptr<ofBoxel::Block> m_stone;
+  std::vector<std::shared_ptr<ofBoxel::Block>> m_blocks;
   glm::ivec3 m_hit, m_hitSide;
   std::vector<glm::ivec3> m_ray;
   std::unique_ptr<ofBoxel::Controller> m_controller;

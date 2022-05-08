@@ -25,8 +25,12 @@ void ofApp::setup() {
       ofBoxel::Shape::Block, std::array<int, 6>{0, 0, 0, 0, 0, 0});
   this->m_grass = std::make_shared<ofBoxel::Block>(
       ofBoxel::Shape::Block, std::array<int, 6>{2, 0, 1, 1, 1, 1});
-  this->m_stone = std::make_shared<ofBoxel::Block>(
-      ofBoxel::Shape::BackSlab, std::array<int, 6>{24, 24, 24, 24, 24, 24});
+  for (int i = 0; i < 7; i++) {
+    m_blocks.emplace_back(std::make_shared<ofBoxel::Block>(
+        static_cast<ofBoxel::Shape>(i),
+        std::array<int, 6>{24, 24, 24, 24, 24, 24}));
+  }
+  this->m_putBlock = 0;
   uint64_t start = ofGetElapsedTimeMillis();
   const int worldSize = 128;
   const int freq = 4;
@@ -113,6 +117,11 @@ void ofApp::keyPressed(int key) {
     }
     this->m_openInv = !m_openInv;
     m_controller->enabledRotation = !m_openInv;
+  } else if (key == 'b') {
+    this->m_putBlock++;
+    if (m_putBlock >= m_blocks.size()) {
+      this->m_putBlock = 0;
+    }
   }
 }
 
@@ -133,7 +142,7 @@ void ofApp::mousePressed(int x, int y, int button) {
     m_world->batch(*m_boxelRenderer.get());
     raycast();
   } else if (button == 2 && m_world->isContains(m_hitSide)) {
-    m_world->setBlock(m_hitSide, m_stone);
+    m_world->setBlock(m_hitSide, m_blocks.at(m_putBlock));
     m_world->invalidate(m_hit);
     m_world->batch(*m_boxelRenderer.get());
     raycast();
