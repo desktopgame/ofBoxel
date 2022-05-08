@@ -264,7 +264,7 @@ bool World::isFilled(const glm::ivec3& pos) const {
   return isRayHit(pos, true);
 }
 
-bool World::isRayHit(const glm::ivec3& pos, bool blockOnly = false) const {
+bool World::isRayHit(const glm::ivec3& pos, bool blockOnly) const {
   if (!isContains(pos)) {
     return false;
   }
