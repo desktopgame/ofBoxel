@@ -36,6 +36,7 @@ class ofApp : public ofBaseApp {
   bool m_openInv;
   std::shared_ptr<ofBoxel::Block> m_dirt;
   std::shared_ptr<ofBoxel::Block> m_grass;
+  std::shared_ptr<ofBoxel::Block> m_stone;
   glm::ivec3 m_hit, m_hitSide;
   std::vector<glm::ivec3> m_ray;
   std::unique_ptr<ofBoxel::Controller> m_controller;
