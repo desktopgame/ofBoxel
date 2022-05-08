@@ -74,26 +74,26 @@ void World::batch(BoxelRenderer& boxelRenderer, const glm::ivec3& pos) {
     case Shape::TopSlab: {
       int offset = 6;
       int scale = 1;
-      if (!isFilled(pos - glm::ivec3(1, 0, 0))) {
+      {
         boxelRenderer.batch(pos, 2 + offset, scale, 2,
                             block->getTextureSlotAt(2));
       }
-      if (!isFilled(pos + glm::ivec3(1, 0, 0))) {
+      {
         boxelRenderer.batch(pos, 3 + offset, scale, 3,
                             block->getTextureSlotAt(3));
       }
-      if (!isFilled(pos - glm::ivec3(0, 0, 1))) {
+      {
         boxelRenderer.batch(pos, 5 + offset, scale, 5,
                             block->getTextureSlotAt(5));
       }
-      if (!isFilled(pos + glm::ivec3(0, 0, 1))) {
+      {
         boxelRenderer.batch(pos, 4 + offset, scale, 4,
                             block->getTextureSlotAt(4));
       }
       if (!isFilled(pos + glm::ivec3(0, 1, 0))) {
         boxelRenderer.batch(pos, 0 + offset, 0, 0, block->getTextureSlotAt(0));
       }
-      if (!isFilled(pos - glm::ivec3(0, 1, 0))) {
+      {
         boxelRenderer.batch(pos, 1 + offset, 0, 1, block->getTextureSlotAt(1));
       }
       break;
@@ -101,23 +101,23 @@ void World::batch(BoxelRenderer& boxelRenderer, const glm::ivec3& pos) {
     case Shape::BottomSlab: {
       int offset = 12;
       int scale = 1;
-      if (!isFilled(pos - glm::ivec3(1, 0, 0))) {
+      {
         boxelRenderer.batch(pos, 2 + offset, scale, 2,
                             block->getTextureSlotAt(2));
       }
-      if (!isFilled(pos + glm::ivec3(1, 0, 0))) {
+      {
         boxelRenderer.batch(pos, 3 + offset, scale, 3,
                             block->getTextureSlotAt(3));
       }
-      if (!isFilled(pos - glm::ivec3(0, 0, 1))) {
+      {
         boxelRenderer.batch(pos, 5 + offset, scale, 5,
                             block->getTextureSlotAt(5));
       }
-      if (!isFilled(pos + glm::ivec3(0, 0, 1))) {
+      {
         boxelRenderer.batch(pos, 4 + offset, scale, 4,
                             block->getTextureSlotAt(4));
       }
-      if (!isFilled(pos + glm::ivec3(0, 1, 0))) {
+      {
         boxelRenderer.batch(pos, 0 + offset, 0, 0, block->getTextureSlotAt(0));
       }
       if (!isFilled(pos - glm::ivec3(0, 1, 0))) {
@@ -131,22 +131,22 @@ void World::batch(BoxelRenderer& boxelRenderer, const glm::ivec3& pos) {
       if (!isFilled(pos - glm::ivec3(1, 0, 0))) {
         boxelRenderer.batch(pos, 2 + offset, 0, 2, block->getTextureSlotAt(2));
       }
-      if (!isFilled(pos + glm::ivec3(1, 0, 0))) {
+      {
         boxelRenderer.batch(pos, 3 + offset, 0, 3, block->getTextureSlotAt(3));
       }
-      if (!isFilled(pos - glm::ivec3(0, 0, 1))) {
+      {
         boxelRenderer.batch(pos, 5 + offset, scale, 5,
                             block->getTextureSlotAt(5));
       }
-      if (!isFilled(pos + glm::ivec3(0, 0, 1))) {
+      {
         boxelRenderer.batch(pos, 4 + offset, scale, 4,
                             block->getTextureSlotAt(4));
       }
-      if (!isFilled(pos + glm::ivec3(0, 1, 0))) {
+      {
         boxelRenderer.batch(pos, 0 + offset, scale, 0,
                             block->getTextureSlotAt(0));
       }
-      if (!isFilled(pos - glm::ivec3(0, 1, 0))) {
+      {
         boxelRenderer.batch(pos, 1 + offset, scale, 1,
                             block->getTextureSlotAt(1));
       }
@@ -155,25 +155,25 @@ void World::batch(BoxelRenderer& boxelRenderer, const glm::ivec3& pos) {
     case Shape::RightSlab: {
       int offset = 24;
       int scale = 2;
-      if (!isFilled(pos - glm::ivec3(1, 0, 0))) {
+      {
         boxelRenderer.batch(pos, 2 + offset, 0, 2, block->getTextureSlotAt(2));
       }
       if (!isFilled(pos + glm::ivec3(1, 0, 0))) {
         boxelRenderer.batch(pos, 3 + offset, 0, 3, block->getTextureSlotAt(3));
       }
-      if (!isFilled(pos - glm::ivec3(0, 0, 1))) {
+      {
         boxelRenderer.batch(pos, 5 + offset, scale, 5,
                             block->getTextureSlotAt(5));
       }
-      if (!isFilled(pos + glm::ivec3(0, 0, 1))) {
+      {
         boxelRenderer.batch(pos, 4 + offset, scale, 4,
                             block->getTextureSlotAt(4));
       }
-      if (!isFilled(pos + glm::ivec3(0, 1, 0))) {
+      {
         boxelRenderer.batch(pos, 0 + offset, scale, 0,
                             block->getTextureSlotAt(0));
       }
-      if (!isFilled(pos - glm::ivec3(0, 1, 0))) {
+      {
         boxelRenderer.batch(pos, 1 + offset, scale, 1,
                             block->getTextureSlotAt(1));
       }
@@ -182,22 +182,22 @@ void World::batch(BoxelRenderer& boxelRenderer, const glm::ivec3& pos) {
     case Shape::FrontSlab: {
       int offset = 30;
       int scale = 0;
-      if (!isFilled(pos - glm::ivec3(1, 0, 0))) {
+      {
         boxelRenderer.batch(pos, 2 + offset, 2, 2, block->getTextureSlotAt(2));
       }
-      if (!isFilled(pos + glm::ivec3(1, 0, 0))) {
+      {
         boxelRenderer.batch(pos, 3 + offset, 2, 3, block->getTextureSlotAt(3));
       }
-      if (!isFilled(pos - glm::ivec3(0, 0, 1))) {
+      {
         boxelRenderer.batch(pos, 5 + offset, 0, 5, block->getTextureSlotAt(5));
       }
       if (!isFilled(pos + glm::ivec3(0, 0, 1))) {
         boxelRenderer.batch(pos, 4 + offset, 0, 4, block->getTextureSlotAt(4));
       }
-      if (!isFilled(pos + glm::ivec3(0, 1, 0))) {
+      {
         boxelRenderer.batch(pos, 0 + offset, 1, 0, block->getTextureSlotAt(0));
       }
-      if (!isFilled(pos - glm::ivec3(0, 1, 0))) {
+      {
         boxelRenderer.batch(pos, 1 + offset, 1, 1, block->getTextureSlotAt(1));
       }
       break;
@@ -205,22 +205,22 @@ void World::batch(BoxelRenderer& boxelRenderer, const glm::ivec3& pos) {
     case Shape::BackSlab: {
       int offset = 36;
       int scale = 0;
-      if (!isFilled(pos - glm::ivec3(1, 0, 0))) {
+      {
         boxelRenderer.batch(pos, 2 + offset, 2, 2, block->getTextureSlotAt(2));
       }
-      if (!isFilled(pos + glm::ivec3(1, 0, 0))) {
+      {
         boxelRenderer.batch(pos, 3 + offset, 2, 3, block->getTextureSlotAt(3));
       }
       if (!isFilled(pos - glm::ivec3(0, 0, 1))) {
         boxelRenderer.batch(pos, 5 + offset, 0, 5, block->getTextureSlotAt(5));
       }
-      if (!isFilled(pos + glm::ivec3(0, 0, 1))) {
+      {
         boxelRenderer.batch(pos, 4 + offset, 0, 4, block->getTextureSlotAt(4));
       }
-      if (!isFilled(pos + glm::ivec3(0, 1, 0))) {
+      {
         boxelRenderer.batch(pos, 0 + offset, 1, 0, block->getTextureSlotAt(0));
       }
-      if (!isFilled(pos - glm::ivec3(0, 1, 0))) {
+      {
         boxelRenderer.batch(pos, 1 + offset, 1, 1, block->getTextureSlotAt(1));
       }
       break;
