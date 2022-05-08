@@ -17,6 +17,7 @@ class World {
   BlockInstance getBlock(const glm::ivec3& pos) const;
   bool isContains(const glm::ivec3& pos) const;
   bool isFilled(const glm::ivec3& pos) const;
+  bool isRayHit(const glm::ivec3& pos, bool blockOnly = false) const;
 
  private:
   glm::ivec3 m_size;

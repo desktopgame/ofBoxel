@@ -261,10 +261,14 @@ bool World::isContains(const glm::ivec3& pos) const {
   return true;
 }
 bool World::isFilled(const glm::ivec3& pos) const {
+  return isRayHit(pos, true);
+}
+
+bool World::isRayHit(const glm::ivec3& pos, bool blockOnly = false) const {
   if (!isContains(pos)) {
     return false;
   }
   auto block = getBlock(pos);
-  return block != nullptr && block->getShape() == Shape::Block;
+  return block != nullptr && (!blockOnly || block->getShape() == Shape::Block);
 }
 }  // namespace ofBoxel
