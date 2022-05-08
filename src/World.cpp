@@ -50,22 +50,22 @@ void World::batch(BoxelRenderer& boxelRenderer, const glm::ivec3& pos) {
     return;
   }
   if (!isFilled(pos - glm::ivec3(1, 0, 0))) {
-    boxelRenderer.batch(pos, 2, 2, block->getTextureSlotAt(2));
+    boxelRenderer.batch(pos, 2, 0, 2, block->getTextureSlotAt(2));
   }
   if (!isFilled(pos + glm::ivec3(1, 0, 0))) {
-    boxelRenderer.batch(pos, 3, 3, block->getTextureSlotAt(3));
+    boxelRenderer.batch(pos, 3, 0, 3, block->getTextureSlotAt(3));
   }
   if (!isFilled(pos - glm::ivec3(0, 0, 1))) {
-    boxelRenderer.batch(pos, 5, 5, block->getTextureSlotAt(5));
+    boxelRenderer.batch(pos, 5, 0, 5, block->getTextureSlotAt(5));
   }
   if (!isFilled(pos + glm::ivec3(0, 0, 1))) {
-    boxelRenderer.batch(pos, 4, 4, block->getTextureSlotAt(4));
+    boxelRenderer.batch(pos, 4, 0, 4, block->getTextureSlotAt(4));
   }
   if (!isFilled(pos + glm::ivec3(0, 1, 0))) {
-    boxelRenderer.batch(pos, 0, 0, block->getTextureSlotAt(0));
+    boxelRenderer.batch(pos, 0, 0, 0, block->getTextureSlotAt(0));
   }
   if (!isFilled(pos - glm::ivec3(0, 1, 0))) {
-    boxelRenderer.batch(pos, 1, 1, block->getTextureSlotAt(1));
+    boxelRenderer.batch(pos, 1, 0, 1, block->getTextureSlotAt(1));
   }
 }
 void World::invalidate(const glm::ivec3& pos) {

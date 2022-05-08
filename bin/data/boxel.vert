@@ -4,10 +4,12 @@ layout(location=3) in vec2 aUV;
 
 layout(location=10) in vec3 aPosition;
 layout(location=11) in float aLocalOffset;
-layout(location=12) in float aLocalRotation;
-layout(location=13) in float aTextureSlot;
+layout(location=12) in float aLocalScale;
+layout(location=13) in float aLocalRotation;
+layout(location=14) in float aTextureSlot;
 uniform mat4 modelViewProjectionMatrix;
-uniform vec3 localOffsetTable[6];
+uniform vec3 localOffsetTable[12];
+uniform vec3 localScaleTable[4];
 uniform mat4 localRotationTable[6];
 
 out float textureSlot;
@@ -24,11 +26,13 @@ mat4 translate(vec3 v) {
 
 void main(void) {
     vec3 localOffset = localOffsetTable[int(aLocalOffset)];
+    vec3 localScale = localScaleTable[int(aLocalScale)];
     mat4 localRotation = localRotationTable[int(aLocalRotation)];
+    vec3 scaled = localScale * aVertex;
     vec3 position = aPosition + localOffset;
     mat4 localTransform = translate(position) * localRotation * translate(-position);
     mat4 MVP = (modelViewProjectionMatrix * localTransform);
     textureSlot = aTextureSlot;
     uv = aUV;
-    gl_Position = MVP * vec4(aVertex + position, 1);
+    gl_Position = MVP * vec4(scaled + position, 1);
 }

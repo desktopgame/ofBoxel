@@ -186,6 +186,6 @@ void ofApp::raycast() {
   if (isHit) {
     int face = static_cast<int>(p.face(m_hit, m_hitSide));
     m_rayRenderer->clear();
-    m_rayRenderer->batch(m_hit, face, face, 63);
+    m_rayRenderer->batch(m_hit, face, 0, face, 63);
   }
 }

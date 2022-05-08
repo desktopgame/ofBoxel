@@ -10,6 +10,7 @@ BoxelRenderer::BoxelRenderer(ofShader shader, const ofMesh& mesh, float offset)
       m_freeIndex(0),
       m_attribPosition(),
       m_attribLocalOffset(),
+      m_attribLocalScale(),
       m_attribLocalRotation(),
       m_attribTextureSlot() {
   // 頂点情報の設定
@@ -31,6 +32,20 @@ BoxelRenderer::BoxelRenderer(ofShader shader, const ofMesh& mesh, float offset)
                           glm::vec3(offset, 0.0f, 0.0f),   // right
                           glm::vec3(0.0f, 0.0f, offset),   // front
                           glm::vec3(0.0f, 0.0f, -offset),  // back
+                          // slab
+                          glm::vec3(0.0f, offset, 0.0f),     // top
+                          glm::vec3(0.0f, -offset, 0.0f),    // bottom
+                          glm::vec3(-offset, offset, 0.0f),  // left
+                          glm::vec3(offset, offset, 0.0f),   // right
+                          glm::vec3(0.0f, offset, offset),   // front
+                          glm::vec3(0.0f, offset, -offset),  // back
+                      });
+  setUniformVec3Array("localScaleTable",
+                      std::vector<glm::vec3>{
+                          glm::vec3(1, 1, 1),     // box
+                          glm::vec3(1, 0.5f, 1),  // top-bottom
+                          glm::vec3(0.5f, 1, 1),  // left-right
+                          glm::vec3(1, 1, 0.5f),  // front-back
                       });
   setUniformMatrixArray(
       "localRotationTable",
@@ -45,19 +60,21 @@ BoxelRenderer::BoxelRenderer(ofShader shader, const ofMesh& mesh, float offset)
   m_shader.end();
 }
 
-void BoxelRenderer::batch(const glm::vec3& pos, int localOffset,
+void BoxelRenderer::batch(const glm::vec3& pos, int localOffset, int localScale,
                           int localRotation, int textureSlot) {
   this->m_dirty = true;
   if (m_freeIndex > 0) {
     int at = static_cast<int>(m_attribPosition.size()) - m_freeIndex;
     m_attribPosition.at(at) = pos;
     m_attribLocalOffset.at(at) = static_cast<float>(localOffset);
+    m_attribLocalScale.at(at) = static_cast<float>(localScale);
     m_attribLocalRotation.at(at) = static_cast<float>(localRotation);
     m_attribTextureSlot.at(at) = static_cast<float>(textureSlot);
     m_freeIndex--;
   } else {
     m_attribPosition.emplace_back(pos);
     m_attribLocalOffset.emplace_back(static_cast<float>(localOffset));
+    m_attribLocalScale.emplace_back(static_cast<float>(localScale));
     m_attribLocalRotation.emplace_back(static_cast<float>(localRotation));
     m_attribTextureSlot.emplace_back(static_cast<float>(textureSlot));
   }
@@ -93,6 +110,7 @@ void BoxelRenderer::compact(const std::vector<glm::ivec3>& update) {
   // 選り分ける
   compact(table, m_attribPosition);
   compact(table, m_attribLocalOffset);
+  compact(table, m_attribLocalScale);
   compact(table, m_attribLocalRotation);
   compact(table, m_attribTextureSlot);
 }
@@ -100,6 +118,7 @@ void BoxelRenderer::compact(const std::vector<glm::ivec3>& update) {
 void BoxelRenderer::clear() {
   m_attribPosition.clear();
   m_attribLocalOffset.clear();
+  m_attribLocalScale.clear();
   m_attribLocalRotation.clear();
   m_attribTextureSlot.clear();
   this->m_dirty = true;
@@ -122,16 +141,21 @@ void BoxelRenderer::rehash() {
                          m_attribLocalOffset.size(), GL_STATIC_DRAW,
                          sizeof(float));
   m_vbo.setAttributeDivisor(11, 1);
-  // ローカル回転を設定
-  m_vbo.setAttributeData(12, &m_attribLocalRotation.front(), 1,
-                         m_attribLocalRotation.size(), GL_STATIC_DRAW,
+  // ローカルスケールを設定
+  m_vbo.setAttributeData(12, &m_attribLocalScale.front(), 1,
+                         m_attribLocalScale.size(), GL_STATIC_DRAW,
                          sizeof(float));
   m_vbo.setAttributeDivisor(12, 1);
-  // テクスチャを設定
-  m_vbo.setAttributeData(13, &m_attribTextureSlot.front(), 1,
-                         m_attribTextureSlot.size(), GL_STATIC_DRAW,
+  // ローカル回転を設定
+  m_vbo.setAttributeData(13, &m_attribLocalRotation.front(), 1,
+                         m_attribLocalRotation.size(), GL_STATIC_DRAW,
                          sizeof(float));
   m_vbo.setAttributeDivisor(13, 1);
+  // テクスチャを設定
+  m_vbo.setAttributeData(14, &m_attribTextureSlot.front(), 1,
+                         m_attribTextureSlot.size(), GL_STATIC_DRAW,
+                         sizeof(float));
+  m_vbo.setAttributeDivisor(14, 1);
 }
 
 void BoxelRenderer::render() {
@@ -151,7 +175,7 @@ void BoxelRenderer::setUniformMatrixArray(const std::string& name,
   }
   std::vector<float> ptr;
   ptr.reserve(16 * mvec.size());
-  for (int mp = 0; mp < 6; mp++) {
+  for (int mp = 0; mp < mvec.size(); mp++) {
     auto const& m = mvec.at(mp);
     const float* data = glm::value_ptr(m);
     for (int i = 0; i < 16; i++) {
