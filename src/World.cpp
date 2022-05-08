@@ -33,12 +33,14 @@ void World::batch(BoxelRenderer& boxelRenderer) {
       }
     }
   } else {
+    // 先に重複を削除
+    auto iter = std::unique(m_dirtyPositions.begin(), m_dirtyPositions.end());
+    m_dirtyPositions.erase(iter, m_dirtyPositions.end());
     // 少しだけ変更されているなら必要に応じてパッチ
     boxelRenderer.compact(m_dirtyPositions);
     for (auto dp : m_dirtyPositions) {
       batch(boxelRenderer, dp);
     }
-    m_dirtyPositions.clear();
   }
   m_dirtyPositions.clear();
 }
