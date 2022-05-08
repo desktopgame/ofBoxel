@@ -8,7 +8,7 @@ layout(location=12) in float aLocalScale;
 layout(location=13) in float aLocalRotation;
 layout(location=14) in float aTextureSlot;
 uniform mat4 modelViewProjectionMatrix;
-uniform vec3 localOffsetTable[12];
+uniform vec3 localOffsetTable[18];
 uniform vec3 localScaleTable[4];
 uniform mat4 localRotationTable[6];
 

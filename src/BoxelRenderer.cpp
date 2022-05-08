@@ -40,6 +40,13 @@ BoxelRenderer::BoxelRenderer(ofShader shader, const ofMesh& mesh, float offset)
                           glm::vec3(offset, halfOffset, 0.0f),   // right
                           glm::vec3(0.0f, halfOffset, offset),   // front
                           glm::vec3(0.0f, halfOffset, -offset),  // back
+                          // bottom-slab
+                          glm::vec3(0.0f, 0.0f, 0.0f),            // top
+                          glm::vec3(0.0f, -offset, 0.0f),         // bottom
+                          glm::vec3(-offset, -halfOffset, 0.0f),  // left
+                          glm::vec3(offset, -halfOffset, 0.0f),   // right
+                          glm::vec3(0.0f, -halfOffset, offset),   // front
+                          glm::vec3(0.0f, -halfOffset, -offset),  // back
                       });
   setUniformVec3Array("localScaleTable",
                       std::vector<glm::vec3>{
